@@ -1,4 +1,4 @@
-@primary: brown;
+@import "vars";
 
 * {
   margin: 0;
@@ -6,11 +6,183 @@
   box-sizing: border-box;
 }
 
-@primary: brown;
-@secondary: black;
+
 .App {
   background: @primary;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   color: @secondary;
+  overflow: hidden;
+
+  & header {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    & button {
+      border: black solid 1px;
+      border-radius: 10px;
+      width: 20%;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    & button:hover,
+    :focus {
+      outline: cornflowerblue solid 3px;
+      transition: all .1s ease-in-out;
+    }
+  }
+
+  & main {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    & .block__todos {
+      display: flex;
+      width: 35vw;
+      height: 100%;
+      border: 1px solid @secondary;
+      overflow-y: scroll;
+    }
+
+    & .todo_form {
+      position: relative;
+      background: @primary;
+      width: 65vw;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      & .todo_title {
+        height: 135px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & label {
+          font-size: 30px;
+          font-weight: 350;
+
+        }
+
+        & div {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+
+          & input {
+            width: 50%;
+            height: 100%;
+            border-radius: 20px;
+            padding: 10px;
+            border: none;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.05), -5px -5px 20px rgba(0, 0, 0, 0.05);
+          }
+
+          & input:hover,
+          input:focus {
+            outline: cornflowerblue solid 3px;
+            transition: all .1s ease-in-out;
+          }
+        }
+      }
+
+      & .description {
+        height: 340px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & label {
+          font-size: 30px;
+          font-weight: 350;
+        }
+
+        & div {
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+
+          & input {
+            width: 500px;
+            height: 100%;
+            border-radius: 20px;
+            padding: 10px;
+            border: none;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.05), -5px -5px 20px rgba(0, 0, 0, 0.05)
+          }
+
+          & input:hover,
+          input:focus {
+            outline: cornflowerblue solid 3px;
+            transition: all .1s ease-in-out;
+          }
+        }
+      }
+
+      & .fields_inputs {
+        min-height: 70px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        & .field_date {
+          width: 100%;
+          padding: 10px 25px 0 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+
+          & input {
+            margin-top: 5px;
+            width: 30%;
+          }
+        }
+
+        & .field_file {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          padding: 10px 0 0 25px;
+
+          & input {
+            margin-top: 5px;
+            width: 100%;
+          }
+        }
+      }
+
+      & button {
+        border: 1px solid @secondary;
+        font-size: 25px;
+        font-weight: 300;
+        border-radius: 20px;
+        padding: 20px;
+        width: 50%;
+        cursor: pointer;
+      }
+
+      & button:hover,
+      button:focus {
+        outline: cornflowerblue solid 3px;
+        transition: all .1s ease-in-out;
+      }
+    }
+  }
 }
+
+.overdue {
+  color: red;
+}
+
+.complete {
+  color: forestgreen;
+}
+
+
+@import "./components/todoList";

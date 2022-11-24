@@ -1,0 +1,115 @@
+
+.todo__list {
+
+  & p {
+    color: @secondary;
+  }
+
+  & .todo__item {
+    position: relative;
+    border: @secondary solid 1px;
+    max-width: 500px;
+    height: 230px;
+    border-radius: 20px;
+    background: @threedary;
+    margin: 0 20px 20px 20px;
+    padding: 10px 20px 20px 20px;
+    overflow: hidden;
+
+    & .todo__header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: @secondary solid 1px;
+      & .title {
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+
+        & h2 {
+          height: 40px;
+          font-size: 30px;
+          font-weight: 350;
+          overflow: hidden;
+          cursor: pointer;
+        }
+      }
+    ;
+
+      & .block__delete {
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        color: red;
+        cursor: pointer;
+
+        & button {
+          position: relative;
+          top: -5px;
+          color: red;
+          font-size: 35px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+
+        }
+
+        & button:hover {
+          color: brown;
+          transform: scale(1.1);
+          transition: all 0.2s linear;
+        }
+      }
+    }
+
+    & .todo_description {
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      padding: 10px;
+      border-bottom: @secondary solid 1px;
+      cursor: pointer;
+    }
+
+    & .todo_footer {
+      display: flex;
+      width: 100%;
+      height: 65px;
+
+      & .block_dateEnd {
+        width: 33%;
+      }
+
+      & .block_complete {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 25px;
+      }
+
+      & .block_toggleToDo {
+        width: 25%;
+        & span {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  & .todo__item:hover,
+  .todo__item:focus {
+    outline: cornflowerblue solid 3px;
+    transition: all .1s ease-in-out;
+  }
+
+
+  & .todo__overdue {
+    border: red solid 5px;
+  }
+
+  & .todo__complete {
+    border: forestgreen solid 5px;
+  }
+}
+
