@@ -3,12 +3,12 @@ import BlockDateEnd from "./todoFooter/blockDateEnd";
 import BlockComplete from "./todoFooter/blockComplete";
 import BlockToggleToDo from "./todoFooter/blockToggleToDo";
 
-const TodoFooter = ({dateEnd, complete, toggleTodo, id}) => {
+const TodoFooter = ({dateEnd, isCompleted, toggleTodo, id}) => {
     return (
         <div className='todo_footer' onClick={(e) => e.stopPropagation()}>
             <BlockDateEnd dateEnd={dateEnd}/>
             <BlockComplete dateEnd={dateEnd}/>
-            <BlockToggleToDo id={id} toggleTodo={toggleTodo} complete={complete}/>
+            <BlockToggleToDo id={id} toggleTodo={toggleTodo} isCompleted={isCompleted}/>
         </div>
     );
 };

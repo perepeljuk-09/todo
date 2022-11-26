@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Task = ({task, setTask}) => {
+const Task = ({content, setContent}) => {
     return (
         <div className='description'>
             <label htmlFor="task">Описание</label>
@@ -8,8 +8,8 @@ const Task = ({task, setTask}) => {
                 <input id='task'
                        type='text'
                        placeholder='Опишите задачу'
-                       value={task}
-                       onChange={(e) => setTask(e.target.value)}
+                       value={content}
+                       onChange={(e) => setContent(e.target.value)}
                 />
             </div>
 

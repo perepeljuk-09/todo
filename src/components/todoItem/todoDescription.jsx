@@ -1,9 +1,9 @@
 import React from 'react';
 
-const TodoDescription = ({task}) => {
+const TodoDescription = ({content}) => {
     return (
         <div className='todo_description'>
-            <span>{task}</span>
+            <span>{content}</span>
         </div>
     );
 };

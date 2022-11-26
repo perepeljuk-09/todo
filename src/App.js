@@ -23,24 +23,24 @@ function App() {
     const [currentTodoId, setCurrentTodoId] = useState(0)
     const [todos, setTodos] = useState([]);
     const [title, setTitle] = useState('');
-    const [task, setTask] = useState('');
+    const [content, setContent] = useState('');
     const [dateEnd, setDateEnd] = useState(new Date().toISOString().split('T')[0]);
     const [isLoad, setIsLoad] = useState(true)
-    const createTodo = (title, task, dateEnd) => ({
+    const createTodo = (title, content, dateEnd) => ({
         title: title,
-        task: task,
+        content: content,
         dateEnd: dateEnd,
-        complete: false,
+        isCompleted: false,
     });
     const addTodo = () => {
         setCurrentTodoId(0)
         setTitle('')
-        setTask('')
+        setContent('')
         setDateEnd(() => new Date().toISOString().split('T')[0])
     };
     const saveTodo = async (newTodo) => {
         try {
-            const resTodo = await addDoc(todosRef, createTodo(title, task, dateEnd))
+            const resTodo = await addDoc(todosRef, createTodo(title, content, dateEnd))
             await updateDoc(doc(firestore, "todos", `${resTodo.id}`),{id: `${resTodo.id}` })
             setTodos(prevState => [...prevState, newTodo])
             setIsLoad(true)
@@ -57,9 +57,9 @@ function App() {
             console.log(e)
         }
     };
-    const toggleTodo = async (id, complete) => {
+    const toggleTodo = async (id, isCompleted) => {
         try {
-            await updateDoc(doc(firestore, "todos", `${id}`), {complete: !complete})
+            await updateDoc(doc(firestore, "todos", `${id}`), {isCompleted: !isCompleted})
             setTodos([
                 ...todos.map(todo =>
                     todo.id === id ?
@@ -75,15 +75,15 @@ function App() {
     const showTodo = (id) => {
         let todo = todos.find(todo => todo.id === id ? todo : '')
         setTitle(todo.title)
-        setTask(todo.task)
+        setContent(todo.content)
         setDateEnd(todo.dateEnd)
         setCurrentTodoId(todo.id)
     };
-    const saveChanges = async (id, title, task, dateEnd) => {
+    const saveChanges = async (id, title, content, dateEnd) => {
         try {
-            await updateDoc(doc(firestore, "todos", `${id}`),{ title: title, task: task, dateEnd: dateEnd})
+            await updateDoc(doc(firestore, "todos", `${id}`),{ title: title, content: content, dateEnd: dateEnd})
             setTodos([...todos.map(todo => todo.id === id
-                ? {...todo, title: title, task: task, dateEnd: dateEnd}
+                ? {...todo, title: title, content: content, dateEnd: dateEnd}
                 : {...todo}
             )])
             setIsLoad(true)
@@ -100,10 +100,9 @@ function App() {
                     initialArray.push(doc.data())
                 }))
                     .then(res => {
-                            console.log(initialArray)
                             setTodos([...initialArray])
                             setTitle('')
-                            setTask('')
+                            setContent('')
                             setDateEnd(() => new Date().toISOString().split('T')[0])
                             setCurrentTodoId(0)
                             setIsLoad(false)
@@ -132,8 +131,8 @@ function App() {
                 </div>
                 <TodoForm title={title}
                           setTitle={setTitle}
-                          task={task}
-                          setTask={setTask}
+                          content={content}
+                          setContent={setContent}
                           dateEnd={dateEnd}
                           setDateEnd={setDateEnd}
                           currentTodoId={currentTodoId}
