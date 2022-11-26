@@ -3,8 +3,7 @@ import React, {useEffect, useState} from "react";
 import TodoList from "./components/todoList";
 import TodoForm from "./components/todoForm";
 import {initializeApp} from "firebase/app";
-import {getFirestore, collection, setDoc, addDoc, getDocs, deleteDoc} from "firebase/firestore"
-import {updateDoc, doc} from "firebase/firestore/lite"
+import {getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc} from "firebase/firestore"
 
 
 const firebaseConfig = {
@@ -20,40 +19,7 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app)
 const todosRef = collection(firestore, "todos")
 
-// console.log(todosRef)
-
-
 function App() {
-    // const fn2 = async () => {
-    //     try {
-    //         // console.log("1")
-    //         // console.log(todosRef)
-    //         // console.log("2")
-    //         // const todos = await addDoc(todosRef, {id: 15, title: "title"})
-    //         const todos = await getDocs(todosRef)
-    //         // const todos = await getDocs(todosRef)
-    //         // const todosList = todos.docs.map(doc => doc.data());
-    //         console.log("hui")
-    //         console.log(todos.docs.map(doc => doc.data()))
-    //     } catch (e) {
-    //         console.log(e)
-    //         console.log("hui2")
-    //     }
-    // }
-    // const fn3 = () => {
-    //     const arrIdss = []
-    //     const arr = []
-    //     console.log(1)
-    //     getDocs(todosRef).then(res => res.docs.map(doc => arrIdss.push(doc.id)))
-    //     getDocs(todosRef).then(res => res.docs.map(doc => arr.push(doc.data())))
-    //     console.log(2)
-    //     debugger
-    //     console.log(arr)
-    //     debugger
-    //     console.log(arr[0])
-    // }
-    // fn3()
-    const [newId, setNewId] = useState(1)
     const [currentTodoId, setCurrentTodoId] = useState(0)
     const [todos, setTodos] = useState([]);
     const [title, setTitle] = useState('');
@@ -61,7 +27,6 @@ function App() {
     const [dateEnd, setDateEnd] = useState(new Date().toISOString().split('T')[0]);
     const [isLoad, setIsLoad] = useState(true)
     const createTodo = (title, task, dateEnd) => ({
-        id: newId,
         title: title,
         task: task,
         dateEnd: dateEnd,
@@ -75,37 +40,37 @@ function App() {
     };
     const saveTodo = async (newTodo) => {
         try {
-            const todos = await addDoc(todosRef, createTodo(title, task, dateEnd))
-            console.log(todos.id, todosRef.id)
-            console.log('success')
-
+            const resTodo = await addDoc(todosRef, createTodo(title, task, dateEnd))
+            await updateDoc(doc(firestore, "todos", `${resTodo.id}`),{id: `${resTodo.id}` })
+            setTodos(prevState => [...prevState, newTodo])
+            setIsLoad(true)
         } catch (e) {
             console.log(e)
         }
-
-        setTitle('')
-        setTask('')
-        setTodos(prevState => [...prevState, newTodo])
-        setNewId(prevState => prevState + 1)
-        setCurrentTodoId(0)
-        setIsLoad(true)
     };
-    const removeTodo = (id) => {
-        setTodos([...todos.filter(todo => todo.id !== id)])
-        setCurrentTodoId(0)
-        setTitle('')
-        setTask('')
-        setDateEnd(() => new Date().toISOString().split('T')[0])
-
+    const removeTodo = async (id) => {
+        try {
+            await deleteDoc(doc(firestore,"todos",`${id}`))
+            setTodos([...todos.filter(todo => todo.id !== id)])
+            setIsLoad(true)
+        } catch (e) {
+            console.log(e)
+        }
     };
-    const toggleTodo = (id) => {
-        setTodos([
-            ...todos.map(todo =>
-                todo.id === id ?
-                    {...todo, complete: !todo.complete}
-                    : {...todo}
-            )
-        ])
+    const toggleTodo = async (id, complete) => {
+        try {
+            await updateDoc(doc(firestore, "todos", `${id}`), {complete: !complete})
+            setTodos([
+                ...todos.map(todo =>
+                    todo.id === id ?
+                        {...todo, complete: !todo.complete}
+                        : {...todo}
+                )
+            ])
+            setIsLoad(true)
+        } catch (e) {
+            console.log(e)
+        }
     };
     const showTodo = (id) => {
         let todo = todos.find(todo => todo.id === id ? todo : '')
@@ -114,15 +79,17 @@ function App() {
         setDateEnd(todo.dateEnd)
         setCurrentTodoId(todo.id)
     };
-    const saveChanges = (id, title, task, dateEnd) => {
-        setTodos([...todos.map(todo => todo.id === id
-            ? {...todo, title: title, task: task, dateEnd: dateEnd}
-            : {...todo}
-        )])
-        setTitle('')
-        setTask('')
-        setDateEnd(() => new Date().toISOString().split('T')[0])
-        setCurrentTodoId(0)
+    const saveChanges = async (id, title, task, dateEnd) => {
+        try {
+            await updateDoc(doc(firestore, "todos", `${id}`),{ title: title, task: task, dateEnd: dateEnd})
+            setTodos([...todos.map(todo => todo.id === id
+                ? {...todo, title: title, task: task, dateEnd: dateEnd}
+                : {...todo}
+            )])
+            setIsLoad(true)
+        } catch (e) {
+            console.log(e)
+        }
     };
 
     useEffect(() => {
@@ -133,58 +100,22 @@ function App() {
                     initialArray.push(doc.data())
                 }))
                     .then(res => {
-                        console.log(initialArray)
-                        setTodos([...initialArray])
-                        setIsLoad(false)
-                    }
-                )
+                            console.log(initialArray)
+                            setTodos([...initialArray])
+                            setTitle('')
+                            setTask('')
+                            setDateEnd(() => new Date().toISOString().split('T')[0])
+                            setCurrentTodoId(0)
+                            setIsLoad(false)
+                        }
+                    )
             } catch (e) {
                 console.log(e)
             }
         }
     }, [isLoad])
 
-    // useEffect(() => {
-    //     if (isLoad) {
-    //
-    //         try {
-    //             const arrIds = []
-    //             const arr = []
-    //             console.log(1)
-    //             getDocs(todosRef).then(res => res.docs.map(doc => arrIds.push(doc.id)))
-    //             getDocs(todosRef).then(res => res.docs.map(doc => arr.push(doc)))
-    //             console.log(2)
-    //             //let docs =  getDocs(todosRef).then(res => res.docs.map(d => d.data()))
-    //             // console.log(arrIds)
-    //             console.log(arr)
-    //             // const ids = []
-    //             // arr.map(i => ids.push(i.id))
-    //             // console.log(arrIds.map(item => item !== "1" ? 5 : 2))
-    //             // console.log(arr.find(item => item.id !== "1"))
-    //             console.log(arr[0])
-    //             // console.log(ids)
-    //             // let deleteTask =
-    //             // console.log(arr.find(item => item.id !== "1"))
-    //             // console.log(deleteTask)
-    //             // deleteDoc(todosRef).then(res => console.log(res))
-    //             // deleteDoc().then(res => console.log(res))
-    //             // const todos = getDocs(todosRef).then(res => res.docs.map(doc => doc.data()))
-    //             // setTodos(arr)
-    //             // getDocs(todosRef).then(res => res.docs.map(doc => console.log(doc)))
-    //             // console.log(arr)
-    //             // console.log(todos)
-    //             // setIsLoad(false)
-    //         } catch (e) {
-    //             console.log(e)
-    //         }
-    //     }
-    //     return () => {
-    //
-    //     }
-    //
-    // }, [])
     return (
-
         <div className="App">
             <header>
                 <button onClick={() => addTodo()}>
