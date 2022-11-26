@@ -5,11 +5,11 @@ const Task = ({content, setContent}) => {
         <div className='description'>
             <label htmlFor="task">Описание</label>
             <div>
-                <input id='task'
-                       type='text'
-                       placeholder='Опишите задачу'
-                       value={content}
-                       onChange={(e) => setContent(e.target.value)}
+                <textarea id='task'
+                          placeholder='Опишите задачу'
+                          value={content}
+                          onChange={(e) => setContent(e.target.value)}
+                          maxLength={500}
                 />
             </div>
 
