@@ -4,6 +4,7 @@ import TodoList from "./components/todoList";
 import TodoForm from "./components/todoForm";
 import {initializeApp} from "firebase/app";
 import {getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc} from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject,} from "firebase/storage";
 
 
 const firebaseConfig = {
@@ -18,6 +19,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app)
 const todosRef = collection(firestore, "todos")
+const storage = getStorage(app)
+// console.log(storageRef)
 
 function App() {
     const [currentTodoId, setCurrentTodoId] = useState(0)
@@ -31,6 +34,7 @@ function App() {
         content: content,
         dateEnd: dateEnd,
         isCompleted: false,
+        pathToFile: '',
     });
     const addTodo = () => {
         setCurrentTodoId(0)
@@ -92,6 +96,46 @@ function App() {
         }
     };
 
+    const formHandler = (e, id) => {
+        e.preventDefault()
+        const file = e.target[0].files[0]
+        uploadFile(id, file)
+    }
+    const uploadFile = (id, file) => {
+        if (!file) return;
+        try {
+            const storageRef = ref(storage, `${id}/${file.name}`);
+            const uploadIMG = uploadBytes(storageRef, file)
+            uploadIMG.then(res => console.log(res))
+            updateDoc(doc(firestore, "todos", id),{pathToFile: `${id}/${file.name}` }).then(
+                res => setIsLoad(true)
+            )
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    const getFile = (url) => {
+        console.log(url)
+        try {
+        getDownloadURL(ref(storage, `w6XxjKBNLrD5sumoHfZq/document.txt`))
+            .then(url => {
+                console.log(url)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    const deleteFile = (url, id) => {
+        console.log(url)
+        deleteObject(ref(storage, `${url}`)).then(res => {
+            updateDoc(doc(firestore, "todos", id),{pathToFile: "" }).then(
+                res => setIsLoad(true)
+            )
+        }).catch((e) => {
+            console.log(e)
+        });
+    }
+
     useEffect(() => {
         if (isLoad) {
             let initialArray = []
@@ -117,6 +161,7 @@ function App() {
     return (
         <div className="App">
             <header>
+
                 <button onClick={() => addTodo()}>
                     Добавить задачу
                 </button>
@@ -127,6 +172,7 @@ function App() {
                               removeTodo={removeTodo}
                               toggleTodo={toggleTodo}
                               showTodo={showTodo}
+                              deleteFile={deleteFile}
                     />
                 </div>
                 <TodoForm title={title}
@@ -139,6 +185,8 @@ function App() {
                           saveChanges={saveChanges}
                           createTodo={createTodo}
                           saveTodo={saveTodo}
+                          formHandler={formHandler}
+                          getFile={getFile}
 
                 />
             </main>

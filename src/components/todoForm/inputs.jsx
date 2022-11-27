@@ -1,16 +1,12 @@
 import React from 'react';
+import FieldDate from "./inputs/fieldDate";
+import FieldFile from "./inputs/fieldFile";
 
-const Inputs = ({dateEnd, setDateEnd, }) => {
+const Inputs = ({dateEnd, setDateEnd, currentTodoId, formHandler, getFile,}) => {
     return (
         <div className='fields_inputs'>
-            <div className='field_date'>
-                <label htmlFor="end_date">Дата завершения задачи</label>
-                <input id='end_date' type="date" value={dateEnd} onChange={(e) => setDateEnd(e.target.value)}/>
-            </div>
-            <div className='field_file'>
-                <label htmlFor="input_file">Добавьте файл</label>
-                <input id='input_file' type="file" />
-            </div>
+            <FieldDate dateEnd={dateEnd} setDateEnd={setDateEnd}/>
+            <FieldFile currentTodoId={currentTodoId} formHandler={formHandler} getFile={getFile}/>
         </div>
     );
 };
