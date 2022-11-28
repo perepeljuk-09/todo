@@ -15,7 +15,7 @@ const TodoItem = ({todo, removeTodo, toggleTodo, showTodo, deleteFile}) => {
         }>
             <TodoHeader id={todo.id} title={todo.title} removeTodo={removeTodo}/>
             <TodoDescription content={todo.content}/>
-            <TodoFile  pathToFile={todo.pathToFile} deleteFile={deleteFile} id={todo.id}/>
+            <TodoFile  urlToFile={todo.urlToFile} pathToFile={todo.pathToFile} deleteFile={deleteFile} id={todo.id}/>
             <TodoFooter dateEnd={todo.dateEnd} isCompleted={todo.isCompleted} toggleTodo={toggleTodo} id={todo.id}/>
         </div>
     );

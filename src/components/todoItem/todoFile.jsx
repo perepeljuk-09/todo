@@ -1,12 +1,12 @@
 import React from 'react';
 
-const TodoFile = ({deleteFile, id, pathToFile,}) => {
+const TodoFile = ({deleteFile, id, pathToFile,urlToFile, }) => {
     return (
         <div className="todo_file">
-            <label htmlFor="files">Кликните, чтоб скачать прикриплённый файл:</label>
+            <span>Ссылка на прикреплённый файл:</span>
             <div className="block_file">
-                <div id="files">
-                    {pathToFile !== '' ? pathToFile : "Пусто"}
+                <div className="files">
+                    {pathToFile !== '' ? <a rel="noreferrer" target="_blank"  href={urlToFile} download>{pathToFile}</a> : "Пусто"}
                 </div>
                 {pathToFile !== '' && <button onClick={(e) => {
                     e.stopPropagation()
