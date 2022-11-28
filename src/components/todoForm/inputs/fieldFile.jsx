@@ -9,7 +9,7 @@ const FieldFile = ({currentTodoId, formHandler, localPathToFile,}) => {
             <form onSubmit={(e) => formHandler(e, currentTodoId, localPathToFile)}>
                 <label htmlFor="input_file">Добавьте файл</label>
                 <input id='input_file' type="file" />
-                <button type="submit"> отправить файл</button>
+                <button type="submit"> прикрепить файл</button>
             </form>
         </div>
 };

@@ -24,7 +24,7 @@ function App() {
         pathToFile: '',
         urlToFile: '',
     });
-    const addTodo = () => {
+    const cleanAllFields = () => {
         setCurrentTodoId(0)
         setTitle('')
         setContent('')
@@ -148,8 +148,8 @@ function App() {
     return (
         <div className="App">
             <header>
-                <button onClick={() => addTodo()}>
-                    Добавить задачу
+                <button onClick={() => cleanAllFields()}>
+                    Очистить все поля
                 </button>
             </header>
             <main>
