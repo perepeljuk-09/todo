@@ -1,3 +1,9 @@
+Данный проект создавался, как тестовое задание.
+Выведение списка задач с помощью базы данных Firebase.google.
+Можно создавать, редактировать поля задач, указывать время окончания задачи,
+добавлять и удалять файлы к задаче, удалять саму задачу
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
